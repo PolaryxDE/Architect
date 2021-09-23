@@ -66,8 +66,10 @@ public final class Architect {
     /**
      * Starts the architect. The start consists of two parts. The first part will initialize all services.
      * The second one will fill all instances and will start the services.
+     *
+     * @return This architect instance.
      */
-    public void start() {
+    public Architect start() {
         try {
             for (DependencyTree.Entry entry : this.registeredServices) {
                 if (entry.getDependencies().size() > 0) {
@@ -84,6 +86,7 @@ public final class Architect {
                 this.services.add(service);
                 service.start();
             }
+            return this;
         } catch (Exception e) {
             throw new RuntimeException("An error occurred while starting architect!", e);
         }
