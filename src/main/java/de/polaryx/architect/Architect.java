@@ -28,6 +28,28 @@ public final class Architect {
     }
 
     /**
+     * Manually fills all {@link Instance}s in the given class. The fields must be static.
+     *
+     * @param clazz The target class to be filled.
+     */
+    public void fillInstances(Class<?> clazz) {
+        try {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Instance.class)) {
+                    IService service = this.services.stream().filter(x -> x.getClass().equals(field.getType()))
+                            .findFirst().orElse(null);
+                    if (service != null) {
+                        field.setAccessible(true);
+                        field.set(null, service);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while manually fill instances in Class!", e);
+        }
+    }
+
+    /**
      * Returns the currently created instance of the wanted {@link IService}.
      *
      * @param clazz The wanted service class.
