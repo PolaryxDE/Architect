@@ -28,6 +28,17 @@ public final class Architect {
     }
 
     /**
+     * Returns the currently created instance of the wanted {@link IService}.
+     *
+     * @param clazz The wanted service class.
+     * @param <T>   The wanted service type.
+     * @return The service or null.
+     */
+    public <T extends IService> T get(Class<T> clazz) {
+        return (T) this.services.stream().filter(x -> x.getClass().equals(clazz)).findFirst().orElse(null);
+    }
+
+    /**
      * Registers a new {@link IService} in the architects system.
      *
      * @param clazz The class of the {@link IService}.
